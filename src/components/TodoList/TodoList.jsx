@@ -9,13 +9,19 @@ const [lista, setLista] = useState([]);
 const [prioridad, setPrioridad] = useState("");
 
 
+const fecha = new Date();
+
+const year = fecha.getFullYear();
+const month = fecha.getMonth() +1;
+const day = fecha.getDate();
+
 const handleSubmit = (e) => {
     e.preventDefault();
      if(tarea.trim() === "" || prioridad === ""){
       alert("Debes ingresar una tarea y una prioridad");
       return;
      }
-  setLista([...lista, {id: Date.now(), texto: tarea, prioridad, completada: false}]);
+  setLista([...lista, {id: Date.now(), texto: tarea, prioridad, completada: false, fecha:`Creado: ${day}/${month}/${year}`}]);
   setTarea("");
   setPrioridad("");
 }
@@ -60,7 +66,7 @@ const handleMod = (id) => {
         <Button type="submit" variant="primary">Agregar</Button>
 
         <ul>
-          {lista.map((t, index) => (<li key={index}><p>{t.texto}</p> <p>{t.prioridad}</p>
+          {lista.map((t, index) => (<li key={index}><p>{t.texto}</p> <p>{t.prioridad}</p> <p>{t.fecha}</p>
           <Button variant="danger" size="sm" onClick={() => handleDelete(t.id)}>Eliminar</Button> 
           <Button variant={t.completada ? "success" : "outline-success"} onClick={() => handleToggle(t.id)}>{t.completada ? "Hecho" : "Ok?"}</Button>
           <Button onClick={() => handleMod(t.id)}>Modificar</Button>
