@@ -1,44 +1,100 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
+import TodoItems from "./TodoItems";
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Row from 'react-bootstrap/Row';
+
+
 
 const TodoList = () => {
   const [tarea, setTarea] = useState("");
   const [lista, setLista] = useState([]);
   const [prioridad, setPrioridad] = useState("");
+  const [contadorId, setContadorId] = useState(1);
+/*   const [show, setShow] = useState(false); */
+const [modalDeleteId, setModalDeleteId] = useState(null)
+ const [validated, setValidated] = useState(false);
 
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const second = date.getSeconds();
+
+
+
+
+const date = new Date();
+const year = date.getFullYear();
+const month = date.getMonth() + 1;
+const day = date.getDate();
+const hours = date.getHours();
+const minutes = date.getMinutes();
+const second = date.getSeconds();
+
+/*  */
+/* 
+
+
+  const handleSubmi = (event) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true);
+  };
+ */
+/*  */
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (tarea.trim() === "" || prioridad === "") {
-      alert("Debes ingresar una tarea y una prioridad");
+
+      // obtener el formu
+    const form = e.currentTarget;
+
+    if (form.checkValidity() === false ) {
+      e.stopPropagation();
+      setValidated(true);
       return;
     }
+/* 
+  if (tarea.trim() === "" || prioridad === "") {
+      alert("Debes ingresar una tarea y una prioridad");
+      return;
+    } 
+
+ */
+
+
     setLista([
       ...lista,
       {
-        id: Date.now(),
+        id: contadorId,
         texto: tarea,
         prioridad,
         completada: false,
-        fecha: `Creado: ${day}/${month}/${year} ${hours}:${minutes}:${second}`,
+        fecha: `${day}/${month}/${year} ${hours}:${minutes}:${second}`,
       },
     ]);
-    setTarea("");
-    setPrioridad("");
+
+  // limpiar los campos
+  setTarea("");
+  setPrioridad("");
+  setContadorId(contadorId + 1);
+
+  // reiniciar validacion
+  setValidated(false);
   };
 
   const handleChange = (e) => setTarea(e.target.value);
 
+  
+  const handleShow = (id) => setModalDeleteId(id);
+    const handleClose = () => setModalDeleteId(null);
   // delete por id
   const handleDelete = (id) => {
+
     setLista(lista.filter((t) => t.id !== id));
+    handleClose();
   };
 
   // marcar completada
@@ -56,9 +112,10 @@ const TodoList = () => {
     setLista(lista.map((t) => (t.id === id ? { ...t, texto: nuevoTexto } : t)));
   };
 
+
   return (
     <div className="container mt-4">
-      <form onSubmit={handleSubmit} className="mb-3">
+{/*       <form onSubmit={handleSubmit} className="mb-3">
         <label>
           Tarea:{" "}
           <input
@@ -82,38 +139,60 @@ const TodoList = () => {
         <Button type="submit" variant="primary">
           Agregar
         </Button>
-
-        <ul>
-          {lista.map((t, index) => (
-            <li key={index}>
-              <p
-                className={`${
-                  t.completada ? "text-decoration-line-through" : ""
-                }`}
-              >
-                {t.texto}
-              </p>{" "}
-              <p>{t.prioridad}</p> <p>{t.fecha}</p>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => handleDelete(t.id)}
-              >
-                Eliminar
-              </Button>
-              <Button
-                variant={t.completada ? "success" : "outline-success"}
-                onClick={() => handleToggle(t.id)}
-              >
-                {t.completada ? "Hecho" : "Ok?"}
-              </Button>
-              <Button onClick={() => handleMod(t.id)}>Modificar</Button>
-            </li>
-          ))}
-        </ul>
       </form>
+ */}
+
+  <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Row className="mb-3">
+        <Form.Group as={Col} md="4" controlId="validationCustom01">
+      <Form.Label>Tarea</Form.Label>
+      <Form.Control
+        required
+        type="text"
+        placeholder="Escribe una tarea"
+        value={tarea}
+        onChange={handleChange}
+      />
+      <Form.Control.Feedback type="invalid">
+        Por favor ingresa una tarea.
+      </Form.Control.Feedback>
+    </Form.Group>
+
+ <Form.Group as={Col} md="4" controlId="validationCustom02">
+      <Form.Label>Prioridad</Form.Label>
+      <Form.Select
+        required
+        value={prioridad}
+        onChange={(e) => setPrioridad(e.target.value)}
+      >
+        <option value="">Selecciona prioridad</option>
+        <option value="baja">Baja</option>
+        <option value="media">Media</option>
+        <option value="alta">Alta</option>
+      </Form.Select>
+      <Form.Control.Feedback type="invalid">
+        Selecciona una prioridad.
+      </Form.Control.Feedback>
+    </Form.Group>
+      </Row>
+   
+       <Button type="submit" variant="primary">
+          Agregar
+        </Button>
+    </Form>
+
+
+        <TodoItems lista={lista} handleDelete={handleDelete} handleToggle={handleToggle} handleMod={handleMod} modalDeleteId={modalDeleteId} handleClose={handleClose} handleShow={handleShow}/>
+       
+
     </div>
   );
 };
 
 export default TodoList;
+
+/* 
+formulario de busqueda
+confirm bostrap modal
+table o list
+ */
