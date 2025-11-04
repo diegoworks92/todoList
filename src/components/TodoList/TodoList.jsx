@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import TodoItems from "./TodoItems";
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+/* import InputGroup from 'react-bootstrap/InputGroup'; */
 import Row from 'react-bootstrap/Row';
 
 
@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 const TodoList = () => {
   const [tarea, setTarea] = useState("");
   const [lista, setLista] = useState([]);
-  const [prioridad, setPrioridad] = useState("");
+  const [prioridad, setPrioridad] = useState("baja");
   const [contadorId, setContadorId] = useState(1);
 /*   const [show, setShow] = useState(false); */
 const [modalDeleteId, setModalDeleteId] = useState(null)
@@ -29,22 +29,6 @@ const hours = date.getHours();
 const minutes = date.getMinutes();
 const second = date.getSeconds();
 
-/*  */
-/* 
-
-
-  const handleSubmi = (event) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    setValidated(true);
-  };
- */
-/*  */
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,13 +40,6 @@ const second = date.getSeconds();
       setValidated(true);
       return;
     }
-/* 
-  if (tarea.trim() === "" || prioridad === "") {
-      alert("Debes ingresar una tarea y una prioridad");
-      return;
-    } 
-
- */
 
 
     setLista([
@@ -78,7 +55,7 @@ const second = date.getSeconds();
 
   // limpiar los campos
   setTarea("");
-  setPrioridad("");
+  setPrioridad("baja");
   setContadorId(contadorId + 1);
 
   // reiniciar validacion
@@ -115,34 +92,8 @@ const second = date.getSeconds();
 
   return (
     <div className="container mt-4">
-{/*       <form onSubmit={handleSubmit} className="mb-3">
-        <label>
-          Tarea:{" "}
-          <input
-            type="text"
-            value={tarea}
-            placeholder="Escribe una tarea"
-            name="tarea"
-            onChange={handleChange}
-          />
-          <select
-            name="prioridad"
-            value={prioridad}
-            onChange={(e) => setPrioridad(e.target.value)}
-          >
-            <option value="">Selecciona prioridad</option>
-            <option value="baja">Baja</option>
-            <option value="media">Media</option>
-            <option value="alta">Alta</option>
-          </select>
-        </label>
-        <Button type="submit" variant="primary">
-          Agregar
-        </Button>
-      </form>
- */}
 
-  <Form noValidate validated={validated} onSubmit={handleSubmit}>
+  <Form noValidate validated={validated} onSubmit={handleSubmit} className="bg-white p-3 mb-3 rounded-4">
       <Row className="mb-3">
         <Form.Group as={Col} md="4" controlId="validationCustom01">
       <Form.Label>Tarea</Form.Label>
@@ -158,27 +109,31 @@ const second = date.getSeconds();
       </Form.Control.Feedback>
     </Form.Group>
 
- <Form.Group as={Col} md="4" controlId="validationCustom02">
-      <Form.Label>Prioridad</Form.Label>
-      <Form.Select
-        required
-        value={prioridad}
-        onChange={(e) => setPrioridad(e.target.value)}
-      >
-        <option value="">Selecciona prioridad</option>
-        <option value="baja">Baja</option>
-        <option value="media">Media</option>
-        <option value="alta">Alta</option>
-      </Form.Select>
-      <Form.Control.Feedback type="invalid">
-        Selecciona una prioridad.
-      </Form.Control.Feedback>
-    </Form.Group>
+<Form.Group as={Col} md="4" controlId="validationCustom02">
+  <Form.Label>Prioridad</Form.Label>
+  <Form.Select
+    required
+    value={prioridad}
+    onChange={(e) => setPrioridad(e.target.value)}
+  >
+    <option value="baja">Baja</option>
+    <option value="media">Media</option>
+    <option value="alta">Alta</option>
+  </Form.Select>
+  <Form.Control.Feedback type="invalid">
+    Selecciona una prioridad.
+  </Form.Control.Feedback>
+</Form.Group>
+{/*  <Col md="auto">
+      <Button type="submit" variant="primary">
+        Agregar
+      </Button>
+    </Col> */}
       </Row>
-   
        <Button type="submit" variant="primary">
           Agregar
         </Button>
+   
     </Form>
 
 
