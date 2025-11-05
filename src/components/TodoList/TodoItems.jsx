@@ -9,25 +9,25 @@ import { MdDelete } from "react-icons/md";
 import { BsCircle } from "react-icons/bs";
 
 
-const TodoItems = ({lista, handleDelete, handleToggle, handleMod, handleShow, modalDeleteId, handleClose}) => {
+const TodoItems = ({ lista, handleDelete, handleToggle, handleEditShow, handleShow, modalDeleteId, handleClose }) => {
 
   return (
     <>
-        {lista.length > 0 ? 
+      {lista.length > 0 ?
 
-     <Table striped bordered hover className="text-center rounded-4 overflow-hidden">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Tarea</th>
-          <th>Prioridad</th>
-          <th>Fecha de creación</th>
-          <th>Realizada</th>
-          <th>Modificar</th>
-          <th>Eliminar</th>
-        </tr>
-      </thead>
-     {/*  <tbody>
+        <Table striped bordered hover className="text-center rounded-4 overflow-hidden">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tarea</th>
+              <th>Prioridad</th>
+              <th>Fecha de creación</th>
+              <th>Realizada</th>
+              <th>Modificar</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          {/*  <tbody>
 
 
 
@@ -73,90 +73,90 @@ const TodoItems = ({lista, handleDelete, handleToggle, handleMod, handleShow, mo
            ) )}
       </tbody> */}
 
-      <tbody>
-  {lista.map((t, index) => (
-    <tr key={t.id}>
-      <td className="align-middle">{index + 1}</td>
-      <td className={`align-middle ${t.completada ? "text-decoration-line-through" : ""}`}>
-        {t.texto}
-      </td>
-      <td className="align-middle">{t.prioridad}</td>
-      <td className="align-middle">{t.fecha}</td>
+          <tbody>
+            {lista.map((t, index) => (
+              <tr key={t.id}>
+                <td className="align-middle">{index + 1}</td>
+                <td className={`align-middle ${t.completada ? "text-decoration-line-through" : ""}`}>
+                  {t.texto}
+                </td>
+                <td className="align-middle">{t.prioridad}</td>
+                <td className="align-middle">{t.fecha}</td>
 
-      {/* Botón marcar completada */}
-      <td className="align-middle text-center">
-        <Button
-          variant={t.completada ? "success" : "outline-success"}
-          onClick={() => handleToggle(t.id)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-            padding: 0,
-          }}
-        >
-          {t.completada ? <FaCheck size={20} /> : <BsCircle size={20} />}
-        </Button>
-      </td>
+                {/* Botón marcar completada */}
+                <td className="align-middle text-center">
+                  <Button
+                    variant={t.completada ? "success" : "outline-success"}
+                    onClick={() => handleToggle(t.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      padding: 0,
+                    }}
+                  >
+                    {t.completada ? <FaCheck size={20} /> : <BsCircle size={20} />}
+                  </Button>
+                </td>
 
-      {/* Botón modificar */}
-      <td className="align-middle text-center">
-        <Button
-          onClick={() => handleMod(t.id)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-            padding: 0,
-          }}
-        >
-          <FaPencilAlt size={20} />
-        </Button>
-      </td>
+                {/* Botón modificar */}
+                <td className="align-middle text-center">
+                  <Button
+                    onClick={() => handleEditShow(t.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      padding: 0,
+                    }}
+                  >
+                    <FaPencilAlt size={20} />
+                  </Button>
+                </td>
 
-      {/* Botón eliminar */}
-      <td className="align-middle text-center">
-        <Button
-          variant="danger"
-          onClick={() => handleShow(t.id)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-            padding: 0,
-          }}
-        >
-          <MdDelete size={20} />
-        </Button>
-        <Modal show={modalDeleteId === t.id} onHide={() => handleClose(t.id)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Eliminar tarea</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>¿Estás seguro que quieres eliminar la tarea?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => handleClose(t.id)}>No</Button>
-            <Button variant="primary" onClick={() => handleDelete(t.id)}>Sí</Button>
-          </Modal.Footer>
-        </Modal>
-      </td>
-    </tr>
-  ))}
-</tbody>
+                {/* Botón eliminar */}
+                <td className="align-middle text-center">
+                  <Button
+                    variant="danger"
+                    onClick={() => handleShow(t.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      padding: 0,
+                    }}
+                  >
+                    <MdDelete size={20} />
+                  </Button>
+                  <Modal show={modalDeleteId === t.id} onHide={() => handleClose(t.id)}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Eliminar tarea</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>¿Estás seguro que quieres eliminar la tarea?</Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={() => handleClose(t.id)}>No</Button>
+                      <Button variant="primary" onClick={() => handleDelete(t.id)}>Sí</Button>
+                    </Modal.Footer>
+                  </Modal>
+                </td>
+              </tr>
+            ))}
+          </tbody>
 
-    </Table>
-       : (        <p className="text-center mt-3">No hay tareas aún <AiOutlineOrderedList /></p>
-) }
-
-
+        </Table>
+        : (<p className="text-center mt-3">No hay tareas aún <AiOutlineOrderedList /></p>
+        )}
 
 
-  
+
+
+
     </>
   )
 }
