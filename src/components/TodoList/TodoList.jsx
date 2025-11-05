@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import TodoItems from "./TodoItems";
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-/* import InputGroup from 'react-bootstrap/InputGroup'; */
 import Row from 'react-bootstrap/Row';
 
 
@@ -13,10 +12,9 @@ const TodoList = () => {
   const [lista, setLista] = useState([]);
   const [prioridad, setPrioridad] = useState("baja");
   const [contadorId, setContadorId] = useState(1);
-/*   const [show, setShow] = useState(false); */
-const [modalDeleteId, setModalDeleteId] = useState(null)
- const [validated, setValidated] = useState(false);
- const [filtroEstado, setFiltroEstado] = useState("todos");
+  const [modalDeleteId, setModalDeleteId] = useState(null)
+  const [validated, setValidated] = useState(false);
+  const [filtroEstado, setFiltroEstado] = useState("todos");
 
 
 
@@ -34,7 +32,7 @@ const second = date.getSeconds();
   const handleSubmit = (e) => {
     e.preventDefault();
 
-      // obtener el formu
+      // obtener el formulario
     const form = e.currentTarget;
 
     if (form.checkValidity() === false ) {
@@ -43,6 +41,13 @@ const second = date.getSeconds();
       return;
     }
 
+
+  //  -30 caracteres
+
+  if (tarea.length > 30) {
+    alert("La tarea no puede tener más de 30 caracteres incluyendo espacios.");
+    return;
+  }
 
     setLista([
       ...lista,
@@ -100,7 +105,7 @@ const second = date.getSeconds();
 
 
   return (
-    <div className="container mt-4">
+    <div  className="container mt-4">
 
   <Form noValidate validated={validated} onSubmit={handleSubmit} className="bg-white p-3 mb-3 rounded-4">
       <Row className="mb-3">
@@ -134,9 +139,9 @@ const second = date.getSeconds();
   </Form.Control.Feedback>
 </Form.Group>
 {/*  <Col md="auto">
-      <Button type="submit" variant="primary">
-        Agregar
-      </Button>
+<Button type="submit" variant="primary">
+  Agregar
+</Button>
     </Col> */}
     <Form.Group as={Col} md="4" controlId="filtroEstado">
             <Form.Label>Mostrar</Form.Label>
@@ -167,8 +172,3 @@ const second = date.getSeconds();
 
 export default TodoList;
 
-/* 
-formulario de busqueda
-confirm bostrap modal
-table o list
- */

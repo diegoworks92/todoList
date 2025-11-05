@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+/*   font-family: "Montserrat",system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
   font-weight: 400;
 
@@ -29,6 +31,7 @@ body {
   min-width: 320px;
   min-height: 100vh; */
     background-color: #000000;
+      font-family: "Montserrat",system-ui, Avenir, Helvetica, Arial, sans-serif;
   
 }
 
