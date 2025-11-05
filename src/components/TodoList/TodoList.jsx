@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 /* import InputGroup from 'react-bootstrap/InputGroup'; */
 import Row from 'react-bootstrap/Row';
-import Modal from 'react-bootstrap/Modal';
+import EditModal from "./EditModal";
 
 
 
@@ -196,71 +196,9 @@ const TodoList = () => {
 
 
       <TodoItems lista={listaFiltrada} handleDelete={handleDelete} handleToggle={handleToggle} handleEditShow={handleEditShow} modalDeleteId={modalDeleteId} handleClose={handleClose} handleShow={handleShow} />
-      {/* Modal de edición */}
-      <Modal show={modalEditId !== null} onHide={handleEditClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar tarea</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="editTexto">
-              <Form.Label>Tarea</Form.Label>
-              <Form.Control
-                type="text"
-                name="texto"
-                value={editForm.texto}
-                onChange={handleEditChange}
-                placeholder="Modifica la tarea"
-              />
-            </Form.Group>
+    
+      < EditModal modalEditId={modalEditId} handleEditClose={handleEditClose} handleEditChange={handleEditChange} handleEditSave={handleEditSave} editForm={editForm} />
 
-            <Form.Group className="mb-3" controlId="editPrioridad">
-              <Form.Label>Prioridad</Form.Label>
-              <Form.Select
-                name="prioridad"
-                value={editForm.prioridad}
-                onChange={handleEditChange}
-              >
-                <option value="baja">Baja</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
-              </Form.Select>
-            </Form.Group>
-
-            {/* <Form.Group className="mb-3" controlId="editFecha">
-              <Form.Label>Fecha (texto)</Form.Label>
-              <Form.Control
-                type="text"
-                name="fecha"
-                value={editForm.fecha}
-                onChange={handleEditChange}
-                placeholder="dd/mm/yyyy hh:mm:ss"
-              />
-              <Form.Text className="text-muted">
-                Puedes dejar la fecha original o cambiarla manualmente.
-              </Form.Text>
-            </Form.Group> */}
-
-            <Form.Group className="mb-3" controlId="editCompletada">
-              <Form.Check
-                type="checkbox"
-                name="completada"
-                label="Completada"
-                checked={!!editForm.completada}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleEditClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleEditSave}>
-            Guardar
-          </Button>
-        </Modal.Footer>
-      </Modal>        
 
     </div>
   );
