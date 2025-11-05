@@ -16,6 +16,8 @@ const TodoList = () => {
 /*   const [show, setShow] = useState(false); */
 const [modalDeleteId, setModalDeleteId] = useState(null)
  const [validated, setValidated] = useState(false);
+ const [filtroEstado, setFiltroEstado] = useState("todos");
+
 
 
 
@@ -89,6 +91,13 @@ const second = date.getSeconds();
     setLista(lista.map((t) => (t.id === id ? { ...t, texto: nuevoTexto } : t)));
   };
 
+  const listaFiltrada = lista.filter((t) => {
+  if (filtroEstado === "todos") return true;
+  if (filtroEstado === "realizadas") return t.completada === true;
+  if (filtroEstado === "no_realizadas") return t.completada === false;
+  return true;
+});
+
 
   return (
     <div className="container mt-4">
@@ -129,6 +138,18 @@ const second = date.getSeconds();
         Agregar
       </Button>
     </Col> */}
+    <Form.Group as={Col} md="4" controlId="filtroEstado">
+            <Form.Label>Mostrar</Form.Label>
+            <Form.Select
+              value={filtroEstado}
+              onChange={(e) => setFiltroEstado(e.target.value)}
+              aria-label="Filtrar tareas por estado"
+            >
+              <option value="todos">Todos</option>
+              <option value="realizadas">Realizadas</option>
+              <option value="no_realizadas">No realizadas</option>
+            </Form.Select>
+          </Form.Group>
       </Row>
        <Button type="submit" variant="primary">
           Agregar
@@ -137,7 +158,7 @@ const second = date.getSeconds();
     </Form>
 
 
-        <TodoItems lista={lista} handleDelete={handleDelete} handleToggle={handleToggle} handleMod={handleMod} modalDeleteId={modalDeleteId} handleClose={handleClose} handleShow={handleShow}/>
+        <TodoItems lista={listaFiltrada} handleDelete={handleDelete} handleToggle={handleToggle} handleMod={handleMod} modalDeleteId={modalDeleteId} handleClose={handleClose} handleShow={handleShow}/>
        
 
     </div>
