@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
-
+import ShowNoTodos from "./ShowNoTodos";
 import { AiOutlineOrderedList } from "react-icons/ai";
 import { FaCheck, FaPencilAlt } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
@@ -150,8 +150,9 @@ const TodoItems = ({ lista, handleDelete, handleToggle, handleEditShow, handleSh
           </tbody>
 
         </Table>
-        : (<p className="text-center mt-3">No hay tareas aún <AiOutlineOrderedList /></p>
-        )}
+        : <ShowNoTodos />
+
+        }
 
 
 
