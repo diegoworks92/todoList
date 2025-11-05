@@ -1,53 +1,56 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import TodoItems from "./TodoItems";
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-
-
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import EditModal from "./EditModal";
 
 const TodoList = () => {
   const [tarea, setTarea] = useState("");
   const [lista, setLista] = useState([]);
   const [prioridad, setPrioridad] = useState("baja");
   const [contadorId, setContadorId] = useState(1);
-  const [modalDeleteId, setModalDeleteId] = useState(null)
+  const [modalDeleteId, setModalDeleteId] = useState(null);
   const [validated, setValidated] = useState(false);
   const [filtroEstado, setFiltroEstado] = useState("todos");
 
+  const [modalEditId, setModalEditId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    texto: "",
+    prioridad: "baja",
+    fecha: "",
+    completada: false,
+  });
 
-
-
-
-
-const date = new Date();
-const year = date.getFullYear();
-const month = date.getMonth() + 1;
-const day = date.getDate();
-const hours = date.getHours();
-const minutes = date.getMinutes();
-const second = date.getSeconds();
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const second = date.getSeconds();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-      // obtener el formulario
+    // obtener el formulario
     const form = e.currentTarget;
 
-    if (form.checkValidity() === false ) {
+    if (form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
       return;
     }
 
+    //  -30 caracteres
 
-  //  -30 caracteres
-
-  if (tarea.length > 30) {
-    alert("La tarea no puede tener más de 30 caracteres incluyendo espacios.");
-    return;
-  }
+    if (tarea.length > 30) {
+      alert(
+        "La tarea no puede tener más de 30 caracteres incluyendo espacios."
+      );
+      return;
+    }
 
     setLista([
       ...lista,
@@ -60,23 +63,21 @@ const second = date.getSeconds();
       },
     ]);
 
-  // limpiar los campos
-  setTarea("");
-  setPrioridad("baja");
-  setContadorId(contadorId + 1);
+    // limpiar los campos
+    setTarea("");
+    setPrioridad("baja");
+    setContadorId(contadorId + 1);
 
-  // reiniciar validacion
-  setValidated(false);
+    // reiniciar validacion
+    setValidated(false);
   };
 
   const handleChange = (e) => setTarea(e.target.value);
 
-  
   const handleShow = (id) => setModalDeleteId(id);
-    const handleClose = () => setModalDeleteId(null);
+  const handleClose = () => setModalDeleteId(null);
   // delete por id
   const handleDelete = (id) => {
-
     setLista(lista.filter((t) => t.id !== id));
     handleClose();
   };
@@ -89,61 +90,101 @@ const second = date.getSeconds();
   };
 
   // modificar tarea
-  const handleMod = (id) => {
-    const nuevoTexto = prompt("Modifica la tarea:");
-    if (!nuevoTexto) return;
 
-    setLista(lista.map((t) => (t.id === id ? { ...t, texto: nuevoTexto } : t)));
+  const handleEditShow = (id) => {
+    const tarea = lista.find((t) => t.id === id);
+    if (!tarea) return;
+    setEditForm({
+      texto: tarea.texto,
+      prioridad: tarea.prioridad,
+      //fecha: tarea.fecha,
+      completada: tarea.completada || false,
+    });
+    setModalEditId(id);
+  };
+
+  const handleEditClose = () => {
+    setModalEditId(null);
+    setEditForm({ texto: "", prioridad: "baja", fecha: "", completada: false });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEditForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleEditSave = () => {
+    if (!editForm.texto || editForm.texto.trim() === "") {
+      alert("La tarea debe tener texto.");
+      return;
+    }
+
+    setLista(
+      lista.map((t) =>
+        t.id === modalEditId
+          ? {
+              ...t,
+              texto: editForm.texto,
+              prioridad: editForm.prioridad,
+              completada: editForm.completada,
+            }
+          : t
+      )
+    );
+
+    setModalEditId(null); // cierra el modal
   };
 
   const listaFiltrada = lista.filter((t) => {
-  if (filtroEstado === "todos") return true;
-  if (filtroEstado === "realizadas") return t.completada === true;
-  if (filtroEstado === "no_realizadas") return t.completada === false;
-  return true;
-});
-
+    if (filtroEstado === "todos") return true;
+    if (filtroEstado === "realizadas") return t.completada === true;
+    if (filtroEstado === "no_realizadas") return t.completada === false;
+    return true;
+  });
 
   return (
-    <div  className="container mt-4">
+    <div className="container mt-4">
+      <Form
+        noValidate
+        validated={validated}
+        onSubmit={handleSubmit}
+        className="bg-white p-3 mb-3 rounded-4"
+      >
+        <Row className="mb-3">
+          <Form.Group as={Col} md="4" controlId="validationCustom01">
+            <Form.Label>Tarea</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Escribe una tarea"
+              value={tarea}
+              onChange={handleChange}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por favor ingresa una tarea.
+            </Form.Control.Feedback>
+          </Form.Group>
 
-  <Form noValidate validated={validated} onSubmit={handleSubmit} className="bg-white p-3 mb-3 rounded-4">
-      <Row className="mb-3">
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-      <Form.Label>Tarea</Form.Label>
-      <Form.Control
-        required
-        type="text"
-        placeholder="Escribe una tarea"
-        value={tarea}
-        onChange={handleChange}
-      />
-      <Form.Control.Feedback type="invalid">
-        Por favor ingresa una tarea.
-      </Form.Control.Feedback>
-    </Form.Group>
+          <Form.Group as={Col} md="4" controlId="validationCustom02">
+            <Form.Label>Prioridad</Form.Label>
+            <Form.Select
+              required
+              value={prioridad}
+              onChange={(e) => setPrioridad(e.target.value)}
+            >
+              <option value="baja">Baja</option>
+              <option value="media">Media</option>
+              <option value="alta">Alta</option>
+            </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              Selecciona una prioridad.
+            </Form.Control.Feedback>
+          </Form.Group>
 
-<Form.Group as={Col} md="4" controlId="validationCustom02">
-  <Form.Label>Prioridad</Form.Label>
-  <Form.Select
-    required
-    value={prioridad}
-    onChange={(e) => setPrioridad(e.target.value)}
-  >
-    <option value="baja">Baja</option>
-    <option value="media">Media</option>
-    <option value="alta">Alta</option>
-  </Form.Select>
-  <Form.Control.Feedback type="invalid">
-    Selecciona una prioridad.
-  </Form.Control.Feedback>
-</Form.Group>
-{/*  <Col md="auto">
-<Button type="submit" variant="primary">
-  Agregar
-</Button>
-    </Col> */}
-    <Form.Group as={Col} md="4" controlId="filtroEstado">
+          <Form.Group as={Col} md="4" controlId="filtroEstado">
             <Form.Label>Mostrar</Form.Label>
             <Form.Select
               value={filtroEstado}
@@ -155,20 +196,30 @@ const second = date.getSeconds();
               <option value="no_realizadas">No realizadas</option>
             </Form.Select>
           </Form.Group>
-      </Row>
-       <Button type="submit" variant="primary">
+        </Row>
+        <Button type="submit" variant="primary">
           Agregar
         </Button>
-   
-    </Form>
+      </Form>
 
-
-        <TodoItems lista={listaFiltrada} handleDelete={handleDelete} handleToggle={handleToggle} handleMod={handleMod} modalDeleteId={modalDeleteId} handleClose={handleClose} handleShow={handleShow}/>
-       
-
+      <TodoItems
+        lista={listaFiltrada}
+        handleDelete={handleDelete}
+        handleToggle={handleToggle}
+        handleEditShow={handleEditShow}
+        modalDeleteId={modalDeleteId}
+        handleClose={handleClose}
+        handleShow={handleShow}
+      />
+      <EditModal
+        modalEditId={modalEditId}
+        handleEditClose={handleEditClose}
+        handleEditChange={handleEditChange}
+        handleEditSave={handleEditSave}
+        editForm={editForm}
+      />
     </div>
   );
 };
 
 export default TodoList;
-

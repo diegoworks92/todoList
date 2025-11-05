@@ -1,16 +1,34 @@
-# React + Vite
+# Todo List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una aplicación de lista de tareas (**Todo List**) creada con **React** y **React-Bootstrap**, que permite agregar, editar, eliminar y marcar tareas como completadas. Además, cuenta con un filtro para mostrar todas las tareas, solo las completadas o las no completadas.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Características
 
-## React Compiler
+- Agregar tareas con un límite de 30 caracteres.
+- Establecer la prioridad de cada tarea: baja, media o alta.
+- Marcar tareas como completadas o no completadas.
+- Editar tareas existentes (texto, prioridad y estado).
+- Eliminar tareas con confirmación mediante modal.
+- Filtrar tareas por estado: todas, realizadas o no realizadas.
+- Responsive: diseño adaptado a dispositivos móviles y pantallas grandes.
+- Estilo moderno usando **React-Bootstrap**.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tecnologías utilizadas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React**: Biblioteca principal para construir la interfaz de usuario.
+- **React-Bootstrap**: Componentes y estilos predefinidos.
+- **React Icons**: Iconos para acciones como editar, eliminar y completar.
+- **Bootstrap 5**: Sistema de diseño y clases utilitarias.
+- **JavaScript (ES6+)**: Lógica de la aplicación.
+- **CSS**: Estilos adicionales personalizados.
+
+---
+
+## Desarrolladores
+
+- Diego Reyes
+- Marc Caixàs
