@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import TodoItems from "./TodoItems";
 import Col from "react-bootstrap/Col";
@@ -6,35 +6,45 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import EditModal from "./EditModal";
 
+const API_URL = "http://localhost:3000/api/v1";
+
 const TodoList = () => {
   const [tarea, setTarea] = useState("");
   const [lista, setLista] = useState([]);
-  const [prioridad, setPrioridad] = useState("baja");
-  const [contadorId, setContadorId] = useState(1);
-  const [modalDeleteId, setModalDeleteId] = useState(null);
+  const [prioridad, setPrioridad] = useState("low");
   const [validated, setValidated] = useState(false);
   const [filtroEstado, setFiltroEstado] = useState("todos");
 
+  const [modalDeleteId, setModalDeleteId] = useState(null);
   const [modalEditId, setModalEditId] = useState(null);
   const [editForm, setEditForm] = useState({
-    texto: "",
-    prioridad: "baja",
-    fecha: "",
-    completada: false,
+    title: "",
+    priority: "low",
+    completed: false,
   });
 
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const second = date.getSeconds();
+  // ✅ Obtener todas las tareas desde el backend
+  const fetchTodos = async () => {
+    try {
+      const res = await fetch(`${API_URL}/todos`);
+      const json = await res.json();
+      if (json.success && json.data) {
+        setLista(json.data);
+      } else {
+        setLista([]);
+      }
+    } catch (error) {
+      console.error("Error al obtener tareas:", error);
+    }
+  };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  // ✅ Crear nueva tarea
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // obtener el formulario
     const form = e.currentTarget;
 
     if (form.checkValidity() === false) {
@@ -43,69 +53,89 @@ const TodoList = () => {
       return;
     }
 
-    //  -30 caracteres
-
-    if (tarea.length > 30) {
-      alert(
-        "La tarea no puede tener más de 30 caracteres incluyendo espacios."
-      );
+    if (tarea.length > 50) {
+      alert("La tarea no puede tener más de 50 caracteres.");
       return;
     }
 
-    setLista([
-      ...lista,
-      {
-        id: contadorId,
-        texto: tarea,
-        prioridad,
-        completada: false,
-        fecha: `${day}/${month}/${year} ${hours}:${minutes}:${second}`,
-      },
-    ]);
+    try {
+      await fetch(`${API_URL}/todo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: tarea,
+          priority: prioridad,
+        }),
+      });
 
-    // limpiar los campos
-    setTarea("");
-    setPrioridad("baja");
-    setContadorId(contadorId + 1);
-
-    // reiniciar validacion
-    setValidated(false);
+      setTarea("");
+      setPrioridad("low");
+      fetchTodos();
+    } catch (error) {
+      console.error("Error al crear tarea:", error);
+    }
   };
 
-  const handleChange = (e) => setTarea(e.target.value);
-
-  const handleShow = (id) => setModalDeleteId(id);
-  const handleClose = () => setModalDeleteId(null);
-  // delete por id
-  const handleDelete = (id) => {
-    setLista(lista.filter((t) => t.id !== id));
-    handleClose();
+  // ✅ Eliminar tarea
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`${API_URL}/todo/${id}`, { method: "DELETE" });
+      fetchTodos();
+      handleClose();
+    } catch (error) {
+      console.error("Error al eliminar tarea:", error);
+    }
   };
 
-  // marcar completada
-  const handleToggle = (id) => {
-    setLista(
-      lista.map((t) => (t.id === id ? { ...t, completada: !t.completada } : t))
-    );
+  // ✅ Cambiar estado completada
+  const handleToggle = async (id) => {
+    const tarea = lista.find((t) => t.id === id);
+    if (!tarea) return;
+
+    try {
+      await fetch(`${API_URL}/todo/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...tarea,
+          completed: !tarea.completed,
+        }),
+      });
+      fetchTodos();
+    } catch (error) {
+      console.error("Error al actualizar tarea:", error);
+    }
   };
 
-  // modificar tarea
-
+  // ✅ Editar tarea
   const handleEditShow = (id) => {
     const tarea = lista.find((t) => t.id === id);
     if (!tarea) return;
     setEditForm({
-      texto: tarea.texto,
-      prioridad: tarea.prioridad,
-      //fecha: tarea.fecha,
-      completada: tarea.completada || false,
+      title: tarea.title,
+      priority: tarea.priority,
+      completed: tarea.completed,
     });
     setModalEditId(id);
   };
 
+  const handleEditSave = async () => {
+    try {
+      await fetch(`${API_URL}/todo/${modalEditId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
+      fetchTodos();
+      setModalEditId(null);
+    } catch (error) {
+      console.error("Error al editar tarea:", error);
+    }
+  };
+
   const handleEditClose = () => {
     setModalEditId(null);
-    setEditForm({ texto: "", prioridad: "baja", fecha: "", completada: false });
+    setEditForm({ title: "", priority: "low", completed: false });
   };
 
   const handleEditChange = (e) => {
@@ -116,32 +146,14 @@ const TodoList = () => {
     }));
   };
 
-  const handleEditSave = () => {
-    if (!editForm.texto || editForm.texto.trim() === "") {
-      alert("La tarea debe tener texto.");
-      return;
-    }
-
-    setLista(
-      lista.map((t) =>
-        t.id === modalEditId
-          ? {
-              ...t,
-              texto: editForm.texto,
-              prioridad: editForm.prioridad,
-              completada: editForm.completada,
-            }
-          : t
-      )
-    );
-
-    setModalEditId(null); // cierra el modal
-  };
+  const handleChange = (e) => setTarea(e.target.value);
+  const handleShow = (id) => setModalDeleteId(id);
+  const handleClose = () => setModalDeleteId(null);
 
   const listaFiltrada = lista.filter((t) => {
     if (filtroEstado === "todos") return true;
-    if (filtroEstado === "realizadas") return t.completada === true;
-    if (filtroEstado === "no_realizadas") return t.completada === false;
+    if (filtroEstado === "realizadas") return t.completed;
+    if (filtroEstado === "no_realizadas") return !t.completed;
     return true;
   });
 
@@ -175,13 +187,10 @@ const TodoList = () => {
               value={prioridad}
               onChange={(e) => setPrioridad(e.target.value)}
             >
-              <option value="baja">Baja</option>
-              <option value="media">Media</option>
-              <option value="alta">Alta</option>
+              <option value="low">Baja</option>
+              <option value="medium">Media</option>
+              <option value="high">Alta</option>
             </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              Selecciona una prioridad.
-            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group as={Col} md="4" controlId="filtroEstado">
@@ -189,7 +198,6 @@ const TodoList = () => {
             <Form.Select
               value={filtroEstado}
               onChange={(e) => setFiltroEstado(e.target.value)}
-              aria-label="Filtrar tareas por estado"
             >
               <option value="todos">Todos</option>
               <option value="realizadas">Realizadas</option>

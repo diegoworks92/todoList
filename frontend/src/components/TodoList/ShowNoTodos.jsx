@@ -7,7 +7,7 @@ const ShowNoTodos = () => {
         No hay tareas aún <FaRegSadTear className="fs-3" />
       </p>
 
-      <p>Crea una nueva tarea con el botón Agregar!</p>
+      <p>Crea una nueva tarea y agregala a la lista!</p>
     </div>
   );
 };
