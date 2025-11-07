@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import EditModal from "./EditModal";
+import Modal from "react-bootstrap/Modal";
 
 const API_URL = "http://localhost:3000/api/v1";
 
@@ -14,6 +15,8 @@ const TodoList = () => {
   const [prioridad, setPrioridad] = useState("low");
   const [validated, setValidated] = useState(false);
   const [filtroEstado, setFiltroEstado] = useState("todos");
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const [modalDeleteId, setModalDeleteId] = useState(null);
   const [modalEditId, setModalEditId] = useState(null);
@@ -53,8 +56,8 @@ const TodoList = () => {
       return;
     }
 
-    if (tarea.length > 50) {
-      alert("La tarea no puede tener más de 50 caracteres.");
+    if (tarea.length > 30) {
+      setShowErrorModal(true);
       return;
     }
 
@@ -120,6 +123,9 @@ const TodoList = () => {
   };
 
   const handleEditSave = async () => {
+    if (editForm.title.length > 30) {
+      setShowErrorModal(true);
+    }
     try {
       await fetch(`${API_URL}/todo/${modalEditId}`, {
         method: "PUT",
@@ -140,13 +146,24 @@ const TodoList = () => {
 
   const handleEditChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (name === "title" && value.length > 30) {
+      setShowErrorModal(true);
+      return;
+    }
     setEditForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleChange = (e) => setTarea(e.target.value);
+  const handleChange = (e) => {
+    const valor = e.target.value;
+    if (valor.length > 30) {
+      setShowErrorModal(true);
+      return;
+    }
+    setTarea(valor);
+  };
   const handleShow = (id) => setModalDeleteId(id);
   const handleClose = () => setModalDeleteId(null);
 
@@ -166,22 +183,33 @@ const TodoList = () => {
         className="bg-white p-3 mb-3 rounded-4"
       >
         <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationCustom01">
-            <Form.Label>Tarea</Form.Label>
+          <Form.Group
+            as={Col}
+            md="4"
+            controlId="validationCustom01"
+            className="mb-3"
+          >
+            <Form.Label className="fw-bold">Tarea</Form.Label>
             <Form.Control
               required
               type="text"
               placeholder="Escribe una tarea"
               value={tarea}
               onChange={handleChange}
+              /*    maxLength={30} */
             />
             <Form.Control.Feedback type="invalid">
               Por favor ingresa una tarea.
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group as={Col} md="4" controlId="validationCustom02">
-            <Form.Label>Prioridad</Form.Label>
+          <Form.Group
+            as={Col}
+            md="4"
+            controlId="validationCustom02"
+            className="mb-3"
+          >
+            <Form.Label className="fw-bold">Prioridad</Form.Label>
             <Form.Select
               required
               value={prioridad}
@@ -193,8 +221,8 @@ const TodoList = () => {
             </Form.Select>
           </Form.Group>
 
-          <Form.Group as={Col} md="4" controlId="filtroEstado">
-            <Form.Label>Mostrar</Form.Label>
+          <Form.Group as={Col} md="4" controlId="filtroEstado" className="mb-3">
+            <Form.Label className="fw-bold">Mostrar</Form.Label>
             <Form.Select
               value={filtroEstado}
               onChange={(e) => setFiltroEstado(e.target.value)}
@@ -205,10 +233,22 @@ const TodoList = () => {
             </Form.Select>
           </Form.Group>
         </Row>
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" className="fw-bold">
           Agregar
         </Button>
       </Form>
+
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Longitud excedida</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>La tarea no puede tener más de 30 caracteres.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowErrorModal(false)}>
+            Entendido
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <TodoItems
         lista={listaFiltrada}

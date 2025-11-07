@@ -16,6 +16,27 @@ const TodoItems = ({
   modalDeleteId,
   handleClose,
 }) => {
+  const traducirPrioridad = {
+    low: "Baja",
+    medium: "Media",
+    high: "Alta",
+  };
+
+
+  const getColorByPriority = (priority) => {
+  switch (priority) {
+    case "low":
+      return "green";
+    case "medium":
+      return "orange";
+    case "high":
+      return "red";
+    default:
+      return "gray";
+  }
+};
+
+
   return (
     <>
       {/* Si hay tareas en la lista */}
@@ -28,30 +49,39 @@ const TodoItems = ({
                 key={t.id}
                 className="border rounded-4 p-3 mb-3 shadow-sm bg-white"
               >
-                {/* Número de tarea */}
-                <div className="d-flex justify-content-between mb-2">
-                  <p className="mb-2">
-                    <strong>#</strong> {index + 1}
-                  </p>
-                </div>
-
                 {/* Detalles de la tarea */}
-                <p
-                  className={`mb-2 ${
-                    t.completed ? "text-decoration-line-through" : ""
-                  }`}
-                >
-                  <strong>Tarea:</strong> {t.title}
-                </p>
                 <p className="mb-2">
-                  <strong>Prioridad:</strong> {t.priority}
+                  <strong>#</strong> {index + 1}
                 </p>
+                <hr />
+                <p className="mb-2">
+                  <strong>Tarea:</strong>{" "}
+                  <span
+                    className={
+                      t.completed ? "text-decoration-line-through" : ""
+                    }
+                  >
+                    {t.title}
+                  </span>
+                </p>
+
+                <hr />
+                <p className="mb-2 d-flex align-items-center gap-2">
+  <strong>Prioridad:</strong>
+  {traducirPrioridad[t.priority]}
+  <BsCircle color={getColorByPriority(t.priority)} />
+</p>
+
+                <hr />
                 <p className="mb-2">
                   <strong>Realizada:</strong> {t.completed ? "Sí" : "No"}
                 </p>
+                <hr />
                 <p className="mb-2">
-                  <strong>Fecha:</strong> {t.createdAt}
+                  <strong>Fecha:</strong>{" "}
+                  {new Date(t.createdAt).toLocaleDateString("es-ES")}
                 </p>
+                <hr />
 
                 {/* Botones de acción */}
                 <div className="d-flex justify-content-start gap-2 mt-2">
@@ -146,10 +176,19 @@ const TodoItems = ({
                     </td>
 
                     {/* Prioridad */}
-                    <td className="align-middle">{t.priority}</td>
+                    <td className="align-middle">
+                      {traducirPrioridad[t.priority]}
+                    </td>
+                  {/*   <td className="align-middle d-flex justify-content-center align-items-center gap-2">
+  <BsCircle color={getColorByPriority(t.priority)} />
+  {traducirPrioridad[t.priority]}
+</td> */}
+
 
                     {/* Fecha de creación */}
-                    <td className="align-middle">{t.createdAt}</td>
+                    <td className="align-middle">
+                      {new Date(t.createdAt).toLocaleDateString("es-ES")}
+                    </td>
 
                     {/* Botón marcar como completada */}
                     <td className="align-middle text-center">

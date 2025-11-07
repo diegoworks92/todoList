@@ -1,17 +1,5 @@
 const connex = require("../mysql/connex");
 
-/* 
-function mapRow(r) {
-  return {
-    id: r.id,
-    texto: r.title,
-    prioridad: r.priority,
-    completada: !!r.completed,
-    fecha: r.createdAt,
-  };
-}
-*/
-
 //  Mapeo actualizado para sincronizar con el frontend
 function mapRow(r) {
   return {
@@ -81,8 +69,8 @@ async function getByID(id = 0) {
 
 //  Actualizar tarea por ID
 async function update(id, todoDATA) {
-  console.log("Actualizando ID:", id);
-  console.log("Contenido de todoDATA:", todoDATA);
+  /*   console.log("Actualizando ID:", id);
+  console.log("Contenido de todoDATA:", todoDATA); */
   try {
     const updates = [];
     const params = [];

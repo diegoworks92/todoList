@@ -106,8 +106,8 @@ async function getTodoById(req, res) {
  * PUT /api/v1/todo/:id
  */
 async function updateTodo(req, res) {
-  console.log("PUT recibido para ID:", req.params.id);
-  console.log("Datos recibidos:", req.body);
+  /*   console.log("PUT recibido para ID:", req.params.id);
+  console.log("Datos recibidos:", req.body); */
 
   const id = req.params.id;
 
