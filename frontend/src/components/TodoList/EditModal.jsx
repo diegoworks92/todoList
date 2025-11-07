@@ -16,36 +16,36 @@ const EditModal = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="editTexto">
+          <Form.Group className="mb-3" controlId="editTitle">
             <Form.Label>Tarea</Form.Label>
             <Form.Control
               type="text"
-              name="texto"
-              value={editForm.texto}
+              name="title"
+              value={editForm.title || ""}
               onChange={handleEditChange}
               placeholder="Modifica la tarea"
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="editPrioridad">
+          <Form.Group className="mb-3" controlId="editPriority">
             <Form.Label>Prioridad</Form.Label>
             <Form.Select
-              name="prioridad"
-              value={editForm.prioridad}
+              name="priority"
+              value={editForm.priority || "low"}
               onChange={handleEditChange}
             >
-              <option value="baja">Baja</option>
-              <option value="media">Media</option>
-              <option value="alta">Alta</option>
+              <option value="low">Baja</option>
+              <option value="medium">Media</option>
+              <option value="high">Alta</option>
             </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="editCompletada">
+          <Form.Group className="mb-3" controlId="editCompleted">
             <Form.Check
               type="checkbox"
-              name="completada"
+              name="completed"
               label="Completada"
-              checked={!!editForm.completada}
+              checked={!!editForm.completed}
               onChange={handleEditChange}
             />
           </Form.Group>
@@ -64,6 +64,3 @@ const EditModal = ({
 };
 
 export default EditModal;
-
-
-

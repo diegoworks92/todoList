@@ -3,7 +3,6 @@ import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 
 import { FaCheck, FaPencilAlt } from "react-icons/fa";
-
 import { MdDelete } from "react-icons/md";
 import { BsCircle } from "react-icons/bs";
 import ShowNoTodos from "./ShowNoTodos";
@@ -19,52 +18,58 @@ const TodoItems = ({
 }) => {
   return (
     <>
+      {/* Si hay tareas en la lista */}
       {lista.length > 0 ? (
         <>
-          {/* Móvil */}
+          {/* Vista para dispositivos móviles */}
           <div className="d-block d-lg-none">
             {lista.map((t, index) => (
               <div
                 key={t.id}
                 className="border rounded-4 p-3 mb-3 shadow-sm bg-white"
               >
+                {/* Número de tarea */}
                 <div className="d-flex justify-content-between mb-2">
                   <p className="mb-2">
                     <strong>#</strong> {index + 1}
                   </p>
                 </div>
 
+                {/* Detalles de la tarea */}
                 <p
                   className={`mb-2 ${
-                    t.completada ? "text-decoration-line-through" : ""
+                    t.completed ? "text-decoration-line-through" : ""
                   }`}
                 >
-                  <strong>Tarea:</strong> {t.texto}
+                  <strong>Tarea:</strong> {t.title}
                 </p>
                 <p className="mb-2">
-                  <strong>Prioridad:</strong> {t.prioridad}
+                  <strong>Prioridad:</strong> {t.priority}
                 </p>
                 <p className="mb-2">
-                  <strong>Realizada:</strong> {t.completada ? "Sí" : "No"}
+                  <strong>Realizada:</strong> {t.completed ? "Sí" : "No"}
                 </p>
                 <p className="mb-2">
-                  <strong>Fecha:</strong> {t.fecha}
+                  <strong>Fecha:</strong> {t.createdAt}
                 </p>
 
-                {/* Botones en una sola línea */}
+                {/* Botones de acción */}
                 <div className="d-flex justify-content-start gap-2 mt-2">
+                  {/* Botón marcar como completada */}
                   <Button
-                    variant={t.completada ? "success" : "outline-success"}
+                    variant={t.completed ? "success" : "outline-success"}
                     onClick={() => handleToggle(t.id)}
                     size="sm"
                   >
-                    {t.completada ? <FaCheck /> : <BsCircle />}
+                    {t.completed ? <FaCheck /> : <BsCircle />}
                   </Button>
 
+                  {/* Botón editar */}
                   <Button onClick={() => handleEditShow(t.id)} size="sm">
                     <FaPencilAlt />
                   </Button>
 
+                  {/* Botón eliminar */}
                   <Button
                     variant="danger"
                     onClick={() => handleShow(t.id)}
@@ -73,7 +78,7 @@ const TodoItems = ({
                     <MdDelete />
                   </Button>
 
-                  {/* Modal */}
+                  {/* Modal de confirmación de eliminación */}
                   <Modal
                     show={modalDeleteId === t.id}
                     onHide={() => handleClose(t.id)}
@@ -104,7 +109,7 @@ const TodoItems = ({
             ))}
           </div>
 
-          {/* pantallas */}
+          {/* Vista para pantallas grandes */}
           <div className="d-none d-lg-block">
             <Table
               responsive
@@ -128,21 +133,28 @@ const TodoItems = ({
               <tbody>
                 {lista.map((t, index) => (
                   <tr key={t.id}>
+                    {/* Número de tarea */}
                     <td className="align-middle">{index + 1}</td>
+
+                    {/* Título de la tarea */}
                     <td
                       className={`align-middle ${
-                        t.completada ? "text-decoration-line-through" : ""
+                        t.completed ? "text-decoration-line-through" : ""
                       }`}
                     >
-                      {t.texto}
+                      {t.title}
                     </td>
-                    <td className="align-middle">{t.prioridad}</td>
-                    <td className="align-middle">{t.fecha}</td>
 
-                    {/* Botón marcar completada */}
+                    {/* Prioridad */}
+                    <td className="align-middle">{t.priority}</td>
+
+                    {/* Fecha de creación */}
+                    <td className="align-middle">{t.createdAt}</td>
+
+                    {/* Botón marcar como completada */}
                     <td className="align-middle text-center">
                       <Button
-                        variant={t.completada ? "success" : "outline-success"}
+                        variant={t.completed ? "success" : "outline-success"}
                         onClick={() => handleToggle(t.id)}
                         style={{
                           display: "inline-flex",
@@ -153,7 +165,7 @@ const TodoItems = ({
                           padding: 0,
                         }}
                       >
-                        {t.completada ? (
+                        {t.completed ? (
                           <FaCheck size={20} />
                         ) : (
                           <BsCircle size={20} />
@@ -161,7 +173,7 @@ const TodoItems = ({
                       </Button>
                     </td>
 
-                    {/* Botón modificar */}
+                    {/* Botón editar */}
                     <td className="align-middle text-center">
                       <Button
                         onClick={() => handleEditShow(t.id)}
@@ -194,6 +206,8 @@ const TodoItems = ({
                       >
                         <MdDelete size={20} />
                       </Button>
+
+                      {/* Modal de confirmación de eliminación */}
                       <Modal
                         show={modalDeleteId === t.id}
                         onHide={() => handleClose(t.id)}
@@ -227,6 +241,7 @@ const TodoItems = ({
           </div>
         </>
       ) : (
+        // Si no hay tareas, mostrar componente alternativo
         <ShowNoTodos />
       )}
     </>

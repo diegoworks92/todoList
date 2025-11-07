@@ -23,7 +23,7 @@ const TodoList = () => {
     completed: false,
   });
 
-  // ✅ Obtener todas las tareas desde el backend
+  //  Obtener todas las tareas desde el backend
   const fetchTodos = async () => {
     try {
       const res = await fetch(`${API_URL}/todos`);
@@ -42,7 +42,7 @@ const TodoList = () => {
     fetchTodos();
   }, []);
 
-  // ✅ Crear nueva tarea
+  //  Crear nueva tarea
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -76,7 +76,7 @@ const TodoList = () => {
     }
   };
 
-  // ✅ Eliminar tarea
+  //  Eliminar tarea
   const handleDelete = async (id) => {
     try {
       await fetch(`${API_URL}/todo/${id}`, { method: "DELETE" });
@@ -87,7 +87,6 @@ const TodoList = () => {
     }
   };
 
-  // ✅ Cambiar estado completada
   const handleToggle = async (id) => {
     const tarea = lista.find((t) => t.id === id);
     if (!tarea) return;
@@ -97,7 +96,8 @@ const TodoList = () => {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...tarea,
+          title: tarea.title,
+          priority: tarea.priority,
           completed: !tarea.completed,
         }),
       });
@@ -107,7 +107,7 @@ const TodoList = () => {
     }
   };
 
-  // ✅ Editar tarea
+  //  Editar tarea
   const handleEditShow = (id) => {
     const tarea = lista.find((t) => t.id === id);
     if (!tarea) return;
